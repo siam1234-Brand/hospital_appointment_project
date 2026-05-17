@@ -1,8 +1,8 @@
 <?php
 include_once("../../helper/auth.php");
-include_once("../../model/HospitalModel.php");
+include_once("../../model/admin/AdminModel.php");
 require_role('admin');
-$model = new HospitalModel();
+$model = new AdminModel();
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : "";
 $list = $model->searchPatients($keyword);
 ?>
