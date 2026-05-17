@@ -1,8 +1,8 @@
 <?php
 include_once("../../helper/auth.php");
-include_once("../../model/HospitalModel.php");
+include_once("../../model/admin/AdminModel.php");
 require_role('admin');
-$model = new HospitalModel();
+$model = new AdminModel();
 $list = $model->getStaff('receptionist');
 ?>
 <!DOCTYPE html>
