@@ -1,9 +1,11 @@
 <?php
 include_once(__DIR__ . "/../user/UserModel.php");
 
-class PatientModel extends UserModel {
+class PatientModel extends UserModel
+{
 
-    public function getPatientByUser($user_id) {
+    public function getPatientByUser($user_id)
+    {
         $patient = $this->fetchOne("SELECT * FROM patients WHERE user_id=?", "i", [$user_id]);
         $user = $this->getUser($user_id);
 
@@ -18,46 +20,61 @@ class PatientModel extends UserModel {
         return $patient;
     }
 
-    public function getPatientIdByUser($user_id) {
+    public function getPatientIdByUser($user_id)
+    {
         $row = $this->fetchOne("SELECT id FROM patients WHERE user_id=?", "i", [$user_id]);
         if ($row == null) return 0;
         return $row['id'];
     }
 
-    public function updatePatientProfile($user_id, $dob, $blood, $gender, $address, $emergencyName, $emergencyPhone) {
+    public function updatePatientProfile($user_id, $dob, $blood, $gender, $address, $emergencyName, $emergencyPhone)
+    {
         return $this->execute("UPDATE patients SET date_of_birth=?, blood_group=?, gender=?, address=?, emergency_contact_name=?, emergency_contact_phone=? WHERE user_id=?", "ssssssi", [$dob, $blood, $gender, $address, $emergencyName, $emergencyPhone, $user_id]);
     }
 
-    public function updateMedicalHistory($patient_id, $notes) {
+    public function updateMedicalHistory($patient_id, $notes)
+    {
         return $this->execute("UPDATE patients SET medical_history_notes=? WHERE id=?", "si", [$notes, $patient_id]);
     }
 
-    public function getDependents($patient_id) {
+    public function getDependents($patient_id)
+    {
         return $this->fetchAll("SELECT * FROM dependents WHERE primary_patient_id=? ORDER BY id DESC", "i", [$patient_id]);
     }
 
-    public function addDependent($patient_id, $name, $dob, $relationship, $blood) {
+    public function addDependent($patient_id, $name, $dob, $relationship, $blood)
+    {
         return $this->execute("INSERT INTO dependents (primary_patient_id, name, date_of_birth, relationship, blood_group) VALUES (?, ?, ?, ?, ?)", "issss", [$patient_id, $name, $dob, $relationship, $blood]);
     }
 
-    public function updateDependent($id, $patient_id, $name, $dob, $relationship, $blood) {
+    public function updateDependent($id, $patient_id, $name, $dob, $relationship, $blood)
+    {
         return $this->execute("UPDATE dependents SET name=?, date_of_birth=?, relationship=?, blood_group=? WHERE id=? AND primary_patient_id=?", "ssssii", [$name, $dob, $relationship, $blood, $id, $patient_id]);
     }
 
-    public function deleteDependent($id, $patient_id) {
+    public function deleteDependent($id, $patient_id)
+    {
         return $this->execute("DELETE FROM dependents WHERE id=? AND primary_patient_id=?", "ii", [$id, $patient_id]);
     }
 
-    public function getSpecializations() {
+
+
+
+
+
+    public function getSpecializations()
+    {
         return $this->fetchAll("SELECT * FROM specializations ORDER BY name");
     }
 
-    public function getSpecializationName($specialization_id) {
+    public function getSpecializationName($specialization_id)
+    {
         $row = $this->fetchOne("SELECT name FROM specializations WHERE id=?", "i", [$specialization_id]);
         return $row != null ? $row['name'] : '';
     }
 
-    public function getDoctorAverageRating($doctor_id) {
+    public function getDoctorAverageRating($doctor_id)
+    {
         $reviews = $this->fetchAll("SELECT rating FROM doctor_reviews WHERE doctor_id=?", "i", [$doctor_id]);
         if (count($reviews) == 0) return 0;
 
@@ -68,12 +85,14 @@ class PatientModel extends UserModel {
         return $sum / count($reviews);
     }
 
-    public function doctorWorksOnDay($doctor_id, $day) {
+    public function doctorWorksOnDay($doctor_id, $day)
+    {
         $row = $this->fetchOne("SELECT id FROM doctor_availability WHERE doctor_id=? AND day_of_week=? AND is_available=1", "is", [$doctor_id, $day]);
         return $row != null;
     }
 
-    public function getDoctorUserRow($doctor_id) {
+    public function getDoctorUserRow($doctor_id)
+    {
         $doctor = $this->fetchOne("SELECT * FROM doctors WHERE id=?", "i", [$doctor_id]);
         if ($doctor == null) return null;
 
@@ -90,7 +109,8 @@ class PatientModel extends UserModel {
         return $doctor;
     }
 
-    public function getApprovedDoctors($search = "", $specialization_id = "", $min_fee = "", $max_fee = "", $day = "") {
+    public function getApprovedDoctors($search = "", $specialization_id = "", $min_fee = "", $max_fee = "", $day = "")
+    {
         $doctors = $this->fetchAll("SELECT * FROM doctors WHERE is_approved=1 ORDER BY id DESC");
         $list = [];
 
@@ -114,15 +134,18 @@ class PatientModel extends UserModel {
         return $list;
     }
 
-    public function getDoctorDetail($doctor_id) {
+    public function getDoctorDetail($doctor_id)
+    {
         return $this->getDoctorUserRow($doctor_id);
     }
 
-    public function getDoctorAvailability($doctor_id) {
+    public function getDoctorAvailability($doctor_id)
+    {
         return $this->fetchAll("SELECT * FROM doctor_availability WHERE doctor_id=? ORDER BY id", "i", [$doctor_id]);
     }
 
-    public function getAvailableSlots($doctor_id, $date) {
+    public function getAvailableSlots($doctor_id, $date)
+    {
         $leave = $this->fetchOne("SELECT id FROM leave_dates WHERE doctor_id=? AND leave_date=?", "is", [$doctor_id, $date]);
         if ($leave != null) return [];
 
@@ -154,7 +177,8 @@ class PatientModel extends UserModel {
         return $slots;
     }
 
-    public function bookAppointment($patient_id, $dependent_id, $doctor_id, $date, $time, $reason, $booked_by) {
+    public function bookAppointment($patient_id, $dependent_id, $doctor_id, $date, $time, $reason, $booked_by)
+    {
         $appointments = $this->fetchAll("SELECT id, status FROM appointments WHERE doctor_id=? AND appointment_date=? AND appointment_time=?", "iss", [$doctor_id, $date, $time]);
         foreach ($appointments as $a) {
             if ($a['status'] != 'cancelled' && $a['status'] != 'rejected' && $a['status'] != 'no_show') {
@@ -165,7 +189,8 @@ class PatientModel extends UserModel {
         return $this->execute("INSERT INTO appointments (patient_id, dependent_id, doctor_id, appointment_date, appointment_time, reason, booked_by) VALUES (?, ?, ?, ?, ?, ?, ?)", "iiissss", [$patient_id, $dependent_id, $doctor_id, $date, $time, $reason, $booked_by]);
     }
 
-    public function addDoctorDataToAppointment($appointment) {
+    public function addDoctorDataToAppointment($appointment)
+    {
         $doctor = $this->getDoctorUserRow($appointment['doctor_id']);
         $appointment['doctor_name'] = $doctor != null ? $doctor['name'] : '';
         $appointment['specialization'] = $doctor != null ? $doctor['specialization'] : '';
@@ -173,7 +198,8 @@ class PatientModel extends UserModel {
         return $appointment;
     }
 
-    public function getUpcomingAppointments($patient_id) {
+    public function getUpcomingAppointments($patient_id)
+    {
         $rows = $this->fetchAll("SELECT * FROM appointments WHERE patient_id=? ORDER BY appointment_date, appointment_time", "i", [$patient_id]);
         $list = [];
 
@@ -186,7 +212,8 @@ class PatientModel extends UserModel {
         return $list;
     }
 
-    public function getPastAppointments($patient_id) {
+    public function getPastAppointments($patient_id)
+    {
         $rows = $this->fetchAll("SELECT * FROM appointments WHERE patient_id=? ORDER BY appointment_date DESC, appointment_time DESC", "i", [$patient_id]);
         $list = [];
 
@@ -199,7 +226,8 @@ class PatientModel extends UserModel {
         return $list;
     }
 
-    public function getPatientUserRow($patient_id) {
+    public function getPatientUserRow($patient_id)
+    {
         $patient = $this->fetchOne("SELECT * FROM patients WHERE id=?", "i", [$patient_id]);
         if ($patient == null) return null;
 
@@ -214,7 +242,8 @@ class PatientModel extends UserModel {
         return $patient;
     }
 
-    public function getAppointment($id) {
+    public function getAppointment($id)
+    {
         $appointment = $this->fetchOne("SELECT * FROM appointments WHERE id=?", "i", [$id]);
         if ($appointment == null) return null;
 
@@ -228,7 +257,8 @@ class PatientModel extends UserModel {
         return $appointment;
     }
 
-    public function cancelPatientAppointment($id, $patient_id, $reason) {
+    public function cancelPatientAppointment($id, $patient_id, $reason)
+    {
         $setting = $this->fetchOne("SELECT setting_value FROM hospital_settings WHERE setting_name='cancel_hours'");
         $hours = 6;
         if ($setting != null) $hours = intval($setting['setting_value']);
@@ -244,11 +274,13 @@ class PatientModel extends UserModel {
         return $this->execute("UPDATE appointments SET status='cancelled', cancel_reason=? WHERE id=? AND patient_id=?", "sii", [$reason, $id, $patient_id]);
     }
 
-    public function rescheduleAppointment($id, $patient_id, $date, $time, $note) {
+    public function rescheduleAppointment($id, $patient_id, $date, $time, $note)
+    {
         return $this->execute("UPDATE appointments SET appointment_date=?, appointment_time=?, status='pending', reschedule_note=? WHERE id=? AND patient_id=?", "sssii", [$date, $time, $note, $id, $patient_id]);
     }
 
-    public function getConsultationNoteByAppointment($appointment_id) {
+    public function getConsultationNoteByAppointment($appointment_id)
+    {
         $note = $this->fetchOne("SELECT * FROM consultation_notes WHERE appointment_id=?", "i", [$appointment_id]);
         if ($note == null) return null;
 
@@ -260,7 +292,8 @@ class PatientModel extends UserModel {
         return $note;
     }
 
-    public function getBillingByPatient($patient_id) {
+    public function getBillingByPatient($patient_id)
+    {
         $bills = $this->fetchAll("SELECT * FROM billing WHERE patient_id=? ORDER BY id DESC", "i", [$patient_id]);
         $list = [];
 
@@ -274,11 +307,13 @@ class PatientModel extends UserModel {
         return $list;
     }
 
-    public function submitPaymentIntent($bill_id, $patient_id, $method) {
+    public function submitPaymentIntent($bill_id, $patient_id, $method)
+    {
         return $this->execute("UPDATE billing SET payment_method=? WHERE id=? AND patient_id=? AND payment_status='pending'", "sii", [$method, $bill_id, $patient_id]);
     }
 
-    public function getBill($bill_id) {
+    public function getBill($bill_id)
+    {
         $bill = $this->fetchOne("SELECT * FROM billing WHERE id=?", "i", [$bill_id]);
         if ($bill == null) return null;
 
@@ -290,7 +325,8 @@ class PatientModel extends UserModel {
         return $bill;
     }
 
-    public function getOwnReviews($patient_id) {
+    public function getOwnReviews($patient_id)
+    {
         $reviews = $this->fetchAll("SELECT * FROM doctor_reviews WHERE patient_id=? ORDER BY id DESC", "i", [$patient_id]);
         $list = [];
 
@@ -303,7 +339,8 @@ class PatientModel extends UserModel {
         return $list;
     }
 
-    public function getDoctorReviews($doctor_id) {
+    public function getDoctorReviews($doctor_id)
+    {
         $reviews = $this->fetchAll("SELECT * FROM doctor_reviews WHERE doctor_id=? ORDER BY created_at DESC", "i", [$doctor_id]);
         $list = [];
 
@@ -316,22 +353,26 @@ class PatientModel extends UserModel {
         return $list;
     }
 
-    public function addReview($appointment_id, $patient_id, $doctor_id, $rating, $text) {
+    public function addReview($appointment_id, $patient_id, $doctor_id, $rating, $text)
+    {
         $old = $this->fetchOne("SELECT id FROM doctor_reviews WHERE appointment_id=? AND patient_id=?", "ii", [$appointment_id, $patient_id]);
         if ($old != null) return false;
 
         return $this->execute("INSERT INTO doctor_reviews (appointment_id, patient_id, doctor_id, rating, review_text) VALUES (?, ?, ?, ?, ?)", "iiiis", [$appointment_id, $patient_id, $doctor_id, $rating, $text]);
     }
 
-    public function updateReview($id, $patient_id, $rating, $text) {
+    public function updateReview($id, $patient_id, $rating, $text)
+    {
         return $this->execute("UPDATE doctor_reviews SET rating=?, review_text=? WHERE id=? AND patient_id=?", "isii", [$rating, $text, $id, $patient_id]);
     }
 
-    public function deleteReview($id, $patient_id) {
+    public function deleteReview($id, $patient_id)
+    {
         return $this->execute("DELETE FROM doctor_reviews WHERE id=? AND patient_id=?", "ii", [$id, $patient_id]);
     }
 
-    public function searchPatients($keyword = "") {
+    public function searchPatients($keyword = "")
+    {
         $patients = $this->fetchAll("SELECT * FROM patients ORDER BY id DESC");
         $list = [];
 
@@ -350,4 +391,3 @@ class PatientModel extends UserModel {
         return $list;
     }
 }
-?>
