@@ -21,12 +21,10 @@ $reviews   = $model->getDoctorReviews($doctor_id);
 <div class="container">
 <h2>Earnings Report</h2>
 
-<!-- These 3 links let the doctor switch the filter -->
 <a href="reports.view.php?period=day">Today</a> |
 <a href="reports.view.php?period=week">This Week</a> |
 <a href="reports.view.php?period=month">This Month</a>
 
-<!-- Shows which filter is currently active -->
 <p>Currently showing: <strong><?php echo htmlspecialchars($period); ?></strong></p>
 
 <table>
@@ -97,7 +95,11 @@ $reviews   = $model->getDoctorReviews($doctor_id);
 <h2>Patient Reviews</h2>
 <table><tr><th>Patient</th><th>Rating</th><th>Review</th><th>Reply</th></tr>
 <?php foreach($reviews as $r){ ?>
-<tr><form method="post" action="../../controller/doctor/reviewReplyHandler.php"><td><?php echo $r['patient_name']; ?></td><td><?php echo $r['rating']; ?></td><td><?php echo $r['review_text']; ?></td><td><input type="hidden" name="id" value="<?php echo $r['id']; ?>"><input type="text" name="reply" value="<?php echo $r['doctor_reply']; ?>"><input type="submit" value="Reply"></td></form></tr>
+<tr><form method="post" action="../../controller/doctor/reviewReplyHandler.php">
+    <td><?php echo $r['patient_name']; ?></td><td><?php echo $r['rating']; ?></td>
+    <td><?php echo $r['review_text']; ?></td>
+    <td><input type="hidden" name="id" value="<?php echo $r['id']; ?>"><input type="text" name="reply" value="<?php echo $r['doctor_reply']; ?>"><input type="submit" value="Reply"></td>
+</form></tr>
 <?php } ?>
 </table>
 </div>
