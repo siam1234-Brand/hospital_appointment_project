@@ -5,6 +5,7 @@ require_role('patient');
 $model = new PatientModel();
 $patient_id = $model->getPatientIdByUser($_SESSION['user_id']);
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     if ($action == 'add') {
