@@ -16,7 +16,15 @@ $messages = $model->getDoctorMessages($doctor_id);
 <?php show_msg(); ?>
 <table><tr><th>Patient</th><th>Message</th><th>Reply</th></tr>
 <?php foreach($messages as $m){ ?>
-<tr><form method="post" action="../../controller/doctor/messageHandler.php"><td><?php echo $m['patient_name']; ?></td><td><?php echo $m['message_text']; ?></td><td><input type="hidden" name="id" value="<?php echo $m['id']; ?>"><input type="text" name="reply" value="<?php echo $m['reply_text']; ?>"><input type="submit" value="Send Reply"></td></form></tr>
+<tr><form method="post" action="../../controller/doctor/messageHandler.php">
+    <td><?php echo $m['patient_name']; ?></td>
+    <td><?php echo $m['message_text']; ?></td>
+    <td>
+        <input type="hidden" name="id" value="<?php echo $m['id']; ?>">
+        <input type="text" name="reply" value="<?php echo $m['reply_text']; ?>">
+        <input type="submit" value="Send Reply">
+    </td>
+</form></tr>
 <?php } ?>
 </table>
 </div>
