@@ -5,6 +5,7 @@ require_role('patient');
 $model = new PatientModel();
 $patient_id = $model->getPatientIdByUser($_SESSION['user_id']);
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
     if ($action == 'book') {
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ok = $model->bookAppointment($patient_id, $dep, $_POST['doctor_id'], $_POST['appointment_date'], $_POST['appointment_time'], $_POST['reason'], 'patient');
             set_msg($ok ? "Appointment booked. Status is pending." : "Slot already booked or invalid.");
         }
-        header('Location: ../../view/patient/book.view.php');
+        header('Location: ../../view/patient/appointments.view.php');
         exit();
     } elseif ($action == 'cancel') {
         $reason = $_POST['cancel_reason'];
@@ -31,4 +32,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 header('Location: ../../view/patient/appointments.view.php');
-?>
