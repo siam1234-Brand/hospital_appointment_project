@@ -6,9 +6,7 @@ require_role('doctor');
 
 header('Content-Type: application/json');
 
-parse_str(file_get_contents('php://input'), $data);
-
-$id = isset($data['id']) ? $data['id'] : 0;
+$id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
 $model = new DoctorModel();
 $doctor_id = $model->getDoctorIdByUser($_SESSION['user_id']);
