@@ -168,22 +168,20 @@ class DoctorModel extends UserModel {
         return $list;
     }
 
-    public function getWeeklyAppointments($doctor_id) {
+        public function getWeeklyAppointments($doctor_id) {
         $rows = $this->fetchAll(
-            "SELECT * FROM appointments WHERE doctor_id=? ORDER BY appointment_date, appointment_time",
+            "SELECT * FROM appointments 
+            WHERE doctor_id=? 
+            AND appointment_date >= CURDATE() 
+            AND appointment_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+            ORDER BY appointment_date, appointment_time",
             "i",
             [$doctor_id]
         );
 
         $list = [];
-        $today = strtotime(date('Y-m-d'));
-        $last = strtotime('+7 days', $today);
-
         foreach ($rows as $row) {
-            $date = strtotime($row['appointment_date']);
-            if ($date >= $today && $date <= $last) {
-                $list[] = $this->addPatientDataToAppointment($row);
-            }
+            $list[] = $this->addPatientDataToAppointment($row);
         }
 
         return $list;
@@ -341,35 +339,57 @@ class DoctorModel extends UserModel {
         );
     }
 
-    public function getEarningsReport($doctor_id) {
-        $appointments = $this->fetchAll(
-            "SELECT * FROM appointments WHERE doctor_id=? AND status='completed' ORDER BY appointment_date DESC",
+    public function getEarningsReport($doctor_id, $period = 'month') {
+    // Build the date range based on the chosen period
+    if ($period === 'day') {
+        $date_condition = "AND appointment_date = CURDATE()";
+        $types = "i";
+        $params = [$doctor_id];
+    } elseif ($period === 'week') {
+        $date_condition = "AND appointment_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+        $types = "i";
+        $params = [$doctor_id];
+    } else {
+        // default: month
+        $date_condition = "AND MONTH(appointment_date) = MONTH(CURDATE()) AND YEAR(appointment_date) = YEAR(CURDATE())";
+        $types = "i";
+        $params = [$doctor_id];
+    }
+
+    $appointments = $this->fetchAll(
+        "SELECT * FROM appointments 
+         WHERE doctor_id=? AND status='completed' $date_condition 
+         ORDER BY appointment_date DESC",
+        $types,
+        $params
+    );
+
+    $report = [];
+
+    foreach ($appointments as $appointment) {
+        $bill = $this->fetchOne(
+            "SELECT * FROM billing WHERE appointment_id=?",
             "i",
-            [$doctor_id]
+            [$appointment['id']]
         );
+        $date = $appointment['appointment_date'];
 
-        $report = [];
+        if (!isset($report[$date])) {
+            $report[$date] = [
+                'appointment_date'  => $date,
+                'completed_count'   => 0,
+                'total_earning'     => 0
+            ];
+        }
 
-        foreach ($appointments as $appointment) {
-            $bill = $this->fetchOne("SELECT * FROM billing WHERE appointment_id=?", "i", [$appointment['id']]);
-            $date = $appointment['appointment_date'];
+        $report[$date]['completed_count']++;
 
-            if (!isset($report[$date])) {
-                $report[$date] = [
-                    'appointment_date' => $date,
-                    'completed_count' => 0,
-                    'total_earning' => 0
-                ];
-            }
-
-            $report[$date]['completed_count']++;
-
-            if ($bill != null) {
-                $report[$date]['total_earning'] += floatval($bill['amount']);
+        if ($bill != null) {
+            $report[$date]['total_earning'] += floatval($bill['amount']);
             }
         }
 
-        return array_values($report);
+    return array_values($report);
     }
 
     public function getDoctorStats($doctor_id) {
@@ -391,6 +411,35 @@ class DoctorModel extends UserModel {
         }
 
         return $stats;
+    }
+
+        public function getDoctorBusiestTimes($doctor_id) {
+        // Busiest days of the week (e.g. Monday had 12 appointments)
+        $days = $this->fetchAll(
+            "SELECT DAYNAME(appointment_date) AS day_name, COUNT(*) AS total
+            FROM appointments
+            WHERE doctor_id=? AND status='completed'
+            GROUP BY DAYNAME(appointment_date)
+            ORDER BY total DESC",
+            "i",
+            [$doctor_id]
+        );
+
+        // Busiest hours (e.g. 10:00 AM had 8 appointments)
+        $hours = $this->fetchAll(
+            "SELECT HOUR(appointment_time) AS hour, COUNT(*) AS total
+            FROM appointments
+            WHERE doctor_id=? AND status='completed'
+            GROUP BY HOUR(appointment_time)
+            ORDER BY total DESC",
+            "i",
+            [$doctor_id]
+        );
+
+        return [
+            'busiest_days'  => $days,
+            'busiest_hours' => $hours
+        ];
     }
 
     public function getUpcomingFollowUps($doctor_id) {
