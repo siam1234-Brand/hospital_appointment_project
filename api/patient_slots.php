@@ -11,4 +11,5 @@ if ($doctor_id != 0 && $date != "") {
     $slots = $model->getAvailableSlots($doctor_id, $date);
 }
 echo json_encode($slots);
+
 ?>
