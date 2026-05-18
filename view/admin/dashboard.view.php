@@ -9,7 +9,7 @@ require_role('admin');
 <?php include_once("menu.php"); ?>
 <div class="container">
 <h2>Admin Dashboard</h2>
-<p>Today's total appointments, registered patients, active doctors and pending billings load by AJAX.</p>
+<p>Today's total appointments, registered patients, active doctors and pending billings</p>
 <div id="stats_box" class="card">Loading...</div>
 <?php show_msg(); ?>
 </div>
