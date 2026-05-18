@@ -21,4 +21,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 header('Location: ../../view/admin/manage_doctors.view.php');
-?>
