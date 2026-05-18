@@ -30,8 +30,8 @@ $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
     <tr>
         <th>Day</th>
         <th>Start</th>
-        <th>End</th><
-        th>Duration</th>
+        <th>End</th>
+        <th>Duration</th>
         <th>Available</th>
     </tr>
 <?php foreach($availability as $a){ ?>
