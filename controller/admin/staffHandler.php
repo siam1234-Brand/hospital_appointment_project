@@ -17,4 +17,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 header('Location: ../../view/admin/manage_receptionists.view.php');
-?>
