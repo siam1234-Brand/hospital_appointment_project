@@ -9,4 +9,5 @@
     <a href="reviews.view.php">Reviews</a>
     <a href="announcements.view.php">Announcements</a>
     <a href="../../controller/user/logout.php">Logout</a>
+    
 </div>
