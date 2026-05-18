@@ -150,6 +150,7 @@ if ($doctor_id != 0) {
 function checkIn(id) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '../../api/doctor_checkin.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
