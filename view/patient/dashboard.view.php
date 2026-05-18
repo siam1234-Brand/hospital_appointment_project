@@ -8,6 +8,7 @@ $upcoming = $model->getUpcomingAppointments($patient_id);
 $bills = $model->getBillingByPatient($patient_id);
 ?>
 <!DOCTYPE html>
+
 <html>
 <head><title>Patient Dashboard</title><link rel="stylesheet" href="../../assets/style.css"></head>
 <body>
