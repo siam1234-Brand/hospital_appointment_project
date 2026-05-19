@@ -22,7 +22,7 @@ $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
     </select><br>
     <input type="time" name="start_time"> Start<br>
     <input type="time" name="end_time"> End<br>
-    Slot Duration: <input type="number" name="slot_duration_minutes" value="30" placeholder="Slot duration"><br>
+    <input type="number" name="slot_duration_minutes" value="30" placeholder="Slot duration"> Slot Duration<br>
     <select name="is_available"><option value="1">Available</option><option value="0">Not Available</option></select><br>
     <input type="submit" value="Save Availability">
 </form>
