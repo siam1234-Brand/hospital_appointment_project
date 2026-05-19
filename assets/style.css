@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f5f5f5;
+    color: #222;
+}
+
+.container {
+    width: 95%;
+    margin: 20px auto;
+    background: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+h1, h2, h3 {
+    margin-top: 5px;
+}
+
+a {
+    color: #0645ad;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.menu {
+    background: #222;
+    padding: 10px;
+}
+
+.menu a {
+    color: white;
+    display: inline-block;
+    margin: 4px 8px;
+}
+
+input, select, textarea, button {
+    padding: 7px;
+    margin: 5px 0;
+    border: 1px solid #999;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="time"], select, textarea {
+    width: 280px;
+    max-width: 95%;
+}
+
+textarea {
+    height: 70px;
+}
+
+button, input[type="submit"] {
+    background: #333;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover, input[type="submit"]:hover {
+    background: #555;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 7px;
+    text-align: left;
+}
+
+th {
+    background: #eeeeee;
+}
+
+.card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background: #fafafa;
+}
+
+.msg {
+    background: #e8ffe8;
+    border: 1px solid green;
+    padding: 8px;
+}
+
+.badge {
+    padding: 3px 6px;
+    border: 1px solid #777;
+    background: #eee;
+}
+
+.small-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+.print-box {
+    width: 700px;
+    margin: 20px auto;
+    border: 1px solid black;
+    padding: 20px;
+}
