@@ -8,5 +8,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $model->replyReview($_POST['id'], $doctor_id, $_POST['reply']);
     set_msg("Review reply saved");
 }
-header('Location: ../../view/doctor/reports.view.php');
+header('Location: ../../view/doctor/messages.view.php');
 ?>
