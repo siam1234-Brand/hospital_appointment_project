@@ -1,21 +1,3 @@
-CREATE DATABASE IF NOT EXISTS hospital_app_db;
-USE hospital_app_db;
-
-DROP TABLE IF EXISTS patient_messages;
-DROP TABLE IF EXISTS complaints;
-DROP TABLE IF EXISTS hospital_settings;
-DROP TABLE IF EXISTS announcements;
-DROP TABLE IF EXISTS dependents;
-DROP TABLE IF EXISTS doctor_reviews;
-DROP TABLE IF EXISTS billing;
-DROP TABLE IF EXISTS consultation_notes;
-DROP TABLE IF EXISTS appointments;
-DROP TABLE IF EXISTS leave_dates;
-DROP TABLE IF EXISTS doctor_availability;
-DROP TABLE IF EXISTS doctors;
-DROP TABLE IF EXISTS specializations;
-DROP TABLE IF EXISTS patients;
-DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
