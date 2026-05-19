@@ -5,6 +5,7 @@ require_role('doctor');
 $model = new DoctorModel();
 $doctor_id = $model->getDoctorIdByUser($_SESSION['user_id']);
 $messages = $model->getDoctorMessages($doctor_id);
+$reviews = $model->getDoctorReviews($doctor_id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,6 +26,29 @@ $messages = $model->getDoctorMessages($doctor_id);
         <input type="submit" value="Send Reply">
     </td>
 </form></tr>
+<?php } ?>
+</table>
+<h2>Patient Reviews</h2>
+<table>
+    <tr>
+        <th>Patient</th>
+        <th>Rating</th>
+        <th>Review</th>
+        <th>Reply</th>
+    </tr>
+<?php foreach($reviews as $r){ ?>
+<tr>
+    <form method="post" action="../../controller/doctor/reviewReplyHandler.php">
+        <td><?php echo $r['patient_name']; ?></td>
+        <td><?php echo $r['rating']; ?></td>
+        <td><?php echo $r['review_text']; ?></td>
+        <td>
+            <input type="hidden" name="id" value="<?php echo $r['id']; ?>">
+            <input type="text" name="reply" value="<?php echo $r['doctor_reply']; ?>">
+            <input type="submit" value="Reply">
+        </td>
+    </form>
+</tr>
 <?php } ?>
 </table>
 </div>
