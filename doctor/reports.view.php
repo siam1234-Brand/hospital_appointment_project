@@ -11,7 +11,6 @@ $earnings  = $model->getEarningsReport($doctor_id, $period);
 $stats     = $model->getDoctorStats($doctor_id);
 $busyTimes  = $model->getDoctorBusiestTimes($doctor_id); 
 $followUps = $model->getFollowUps($doctor_id);
-$reviews   = $model->getDoctorReviews($doctor_id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -91,16 +90,6 @@ $reviews   = $model->getDoctorReviews($doctor_id);
     <?php } else { ?>
         <tr><td colspan="2">No data yet.</td></tr>
     <?php } ?>
-</table>
-<h2>Patient Reviews</h2>
-<table><tr><th>Patient</th><th>Rating</th><th>Review</th><th>Reply</th></tr>
-<?php foreach($reviews as $r){ ?>
-<tr><form method="post" action="../../controller/doctor/reviewReplyHandler.php">
-    <td><?php echo $r['patient_name']; ?></td><td><?php echo $r['rating']; ?></td>
-    <td><?php echo $r['review_text']; ?></td>
-    <td><input type="hidden" name="id" value="<?php echo $r['id']; ?>"><input type="text" name="reply" value="<?php echo $r['doctor_reply']; ?>"><input type="submit" value="Reply"></td>
-</form></tr>
-<?php } ?>
 </table>
 </div>
 </body>
